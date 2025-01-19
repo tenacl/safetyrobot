@@ -73,7 +73,7 @@ class YOLOPersonDetector(VideoProcessorBase):
 
 
 def main():
-    st.title("실시간 인원 감지 시스템 (streamlit-webrtc)")
+    st.title("실시간 인원 감지 시스템")
 
     st.markdown("""
     - 브라우저에서 '카메라 권한'을 허용하면, 실시간 웹캠 영상이 스트리밍됩니다.
