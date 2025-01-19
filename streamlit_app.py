@@ -37,6 +37,15 @@ header {
 """
 st.markdown(hide_github_icon, unsafe_allow_html=True)
 
+# Custom CSS to hide the profile icon in Streamlit Cloud
+hide_profile_icon = """
+<style>
+.css-1cpxqw2 {display: none;}  /* 프로필 아이콘 숨기기 */
+</style>
+"""
+st.markdown(hide_profile_icon, unsafe_allow_html=True)
+
+
 # 경고음을 대신할 경고메시지 표시 함수
 def play_alert():
     st.warning("⚠️ 사람 감지됨!")
