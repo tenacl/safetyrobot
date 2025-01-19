@@ -84,12 +84,16 @@ class YOLOPersonDetector(VideoProcessorBase):
 
 def login():
     """로그인 화면을 보여줍니다."""
+    # secrets.toml에서 인증 정보 읽기
+    valid_username = st.secrets["authentication"]["username"]
+    valid_password = st.secrets["authentication"]["password"]
+
     st.title("로그인")
     username = st.text_input("아이디")
     password = st.text_input("비밀번호", type="password")
     
     if st.button("로그인"):
-        if username == "admin" and password == "gpterscto":
+        if username == valid_username and password == valid_password:
             st.session_state.logged_in = True
             st.session_state.username = username
             st.experimental_rerun()  # 로그인 후 화면을 새로고침하여 상태를 반영합니다.
