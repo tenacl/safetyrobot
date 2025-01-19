@@ -1,0 +1,6 @@
+[global]
+showMenu = false
+showFooter = false
+
+[ui]
+hideTopBar = true
