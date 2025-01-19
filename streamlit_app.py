@@ -1,19 +1,18 @@
-#클로드로작성, 스트림릿, 소리까지 나옴
+# Streamlit, YOLO, OpenCV 사용, 소리 알림 포함
 import streamlit as st
 import cv2
 import numpy as np
 from ultralytics import YOLO
 import time
-import winsound  # Windows 시스템용 소리 재생
 import platform  # 운영체제 확인용
 
+# 경고음을 재생하는 함수
 def play_alert():
-    if platform.system() == 'Windows':
-        winsound.Beep(1000, 500)  # 1000Hz로 0.5초 동안 소리
-    else:
-        # macOS나 Linux의 경우 print로 대체
-        print('\a')  # 시스템 비프음
+    # 소리 대신 로그로 대체 (Streamlit Cloud에서는 소리 재생이 제한됨)
+    st.warning("⚠️ 사람 감지됨!")
+    print('\a')  # 시스템 비프음
 
+# 메인 함수
 def main():
     st.title("실시간 인원 감지 시스템")
     
@@ -24,7 +23,7 @@ def main():
     @st.cache_resource
     def load_model():
         try:
-            model = YOLO('yolov8n.pt')
+            model = YOLO('yolov8n.pt')  # YOLO 모델 로드
             st.write("YOLO 모델 로드 성공")
             return model
         except Exception as e:
@@ -33,10 +32,10 @@ def main():
 
     model = load_model()
     
-    # 웹캠 초기화 - 수정된 부분
+    # 웹캠 초기화
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
-        st.error("웹캠을 열 수 없습니다.")
+        st.error("웹캠을 열 수 없습니다. 웹캠이 연결되어 있는지 확인하세요.")
         return
     
     st.write("웹캠 초기화 성공")
@@ -47,14 +46,11 @@ def main():
     # 제어 버튼
     stop_button = st.button("감지 정지")
     
-    # 이전 프레임의 사람 수를 저장할 변수
-    prev_person_count = 0
-    
     # 마지막 경고음 재생 시간
     last_alert_time = 0
-    
+
+    # 감지 루프
     while not stop_button:
-        # 웹캠에서 프레임 읽기 - 수정된 부분
         ret, frame = cap.read()
         if not ret:
             st.error("프레임을 읽을 수 없습니다.")
@@ -78,18 +74,15 @@ def main():
                         x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
                         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
                         cv2.putText(frame, f"Person {confidence:.2f}", 
-                                  (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 
-                                  0.5, (0, 255, 0), 2)
+                                    (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 
+                                    0.5, (0, 255, 0), 2)
                 
-                # 사람이 감지되고 마지막 경고음으로부터 1초가 지났으면 경고음 재생
+                # 사람이 감지되고 마지막 경고음으로부터 1초가 지났으면 경고 알림 표시
                 current_time = time.time()
                 if person_count > 0 and (current_time - last_alert_time) >= 1.0:
                     play_alert()
                     last_alert_time = current_time
-                
-                # 현재 사람 수 저장
-                prev_person_count = person_count
-            
+
             # BGR을 RGB로 변환
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             
