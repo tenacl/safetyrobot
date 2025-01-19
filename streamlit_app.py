@@ -12,6 +12,16 @@ from streamlit_webrtc import (
     VideoProcessorBase,
 )
 
+# Custom CSS
+hide_github_style = """
+<style>
+footer {visibility: hidden;}
+</style>
+"""
+
+st.markdown(hide_github_style, unsafe_allow_html=True)
+
+
 # 경고음을 대신할 경고메시지 표시 함수
 def play_alert():
     st.warning("⚠️ 사람 감지됨!")
