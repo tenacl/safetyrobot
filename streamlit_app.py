@@ -12,15 +12,25 @@ from streamlit_webrtc import (
     VideoProcessorBase,
 )
 
-# Custom CSS
-hide_github_style = """
+# Custom CSS to hide GitHub icon, menu, footer, and header
+hide_github_icon = """
 <style>
-footer {visibility: hidden;}
+.css-1jc7ptx, .e1ewe7hr3, .viewerBadge_container__1QSob, .styles_viewerBadge__1yB5_, 
+.viewerBadge_link__1S137, .viewerBadge_text__1JaDK { 
+    display: none; 
+} 
+#MainMenu { 
+    visibility: hidden; 
+} 
+footer { 
+    visibility: hidden; 
+} 
+header { 
+    visibility: hidden; 
+}
 </style>
 """
-
-st.markdown(hide_github_style, unsafe_allow_html=True)
-
+st.markdown(hide_github_icon, unsafe_allow_html=True)
 
 # 경고음을 대신할 경고메시지 표시 함수
 def play_alert():
@@ -72,8 +82,33 @@ class YOLOPersonDetector(VideoProcessorBase):
         return av.VideoFrame.from_ndarray(img, format="bgr24")
 
 
+def login():
+    """로그인 화면을 보여줍니다."""
+    st.title("로그인")
+    username = st.text_input("아이디")
+    password = st.text_input("비밀번호", type="password")
+    
+    if st.button("로그인"):
+        if username == "admin" and password == "gpterscto":
+            st.session_state.logged_in = True
+            st.session_state.username = username
+            st.success(f"환영합니다, {username}님!")
+        else:
+            st.error("아이디 또는 비밀번호가 올바르지 않습니다.")
+
+
 def main():
-    st.title("실시간 인원 감지 시스템")
+    # 로그인 세션 상태 확인
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
+
+    # 로그인되지 않은 경우 로그인 화면 표시
+    if not st.session_state.logged_in:
+        login()
+        return
+
+    # 로그인 성공 후 앱 기능 제공
+    st.title("실시간 인원 감지 시스템 (streamlit-webrtc)")
 
     st.markdown("""
     - 브라우저에서 '카메라 권한'을 허용하면, 실시간 웹캠 영상이 스트리밍됩니다.
@@ -100,6 +135,11 @@ def main():
         if webrtc_ctx.state.playing:
             webrtc_ctx.stop()
             st.info("감지를 정지했습니다.")
+
+    # 로그아웃 버튼
+    if st.button("로그아웃"):
+        st.session_state.logged_in = False
+        st.info("로그아웃되었습니다. 다시 로그인해주세요.")
 
 
 if __name__ == "__main__":
