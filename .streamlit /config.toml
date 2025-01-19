@@ -4,3 +4,7 @@ showFooter = false
 
 [ui]
 hideTopBar = true
+
+[theme]
+showFooter = false
+
