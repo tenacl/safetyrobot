@@ -12,6 +12,11 @@ from streamlit_webrtc import (
     VideoProcessorBase,
 )
 
+if st.button("캐시 삭제"):
+    st.cache_data.clear()  # 데이터 캐시 초기화
+    st.cache_resource.clear()  # 리소스 캐시 초기화
+    st.success("캐시가 삭제되었습니다!")
+
 # Custom CSS to hide GitHub icon, menu, footer, and header
 hide_github_icon = """
 <style>
