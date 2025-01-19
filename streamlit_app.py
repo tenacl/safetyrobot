@@ -116,7 +116,7 @@ def main():
         return
 
     # 로그인 성공 후 앱 기능 제공
-    st.title("실시간 인원 감지 시스템 (streamlit-webrtc)")
+    st.title("실시간 인원 감지 시스템(v.250119.2117)")
 
     st.markdown("""
     - 브라우저에서 '카메라 권한'을 허용하면, 실시간 웹캠 영상이 스트리밍됩니다.
